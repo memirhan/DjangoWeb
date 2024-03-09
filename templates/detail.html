@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Post content-->
+        <article>
+            <!-- Post header-->
+            <header class="mb-4">
+                <!-- Post title-->
+                <h1 class="fw-bolder mb-1">{{article.title}}</h1>
+                <!-- Author title-->
+                <div class="text-muted fst-italic mb-2">{{article.author.username}}</div>
+                <hr>
+                <!-- Post meta content-->
+                <div class="text-muted fst-italic mb-2">{{article.createdDate}}</div>
+                <hr>
+            </header>
+
+            {% if article.articleImage %}<!--Eğer resim varsa -->
+            <!-- Preview image figure-->
+            <figure class="mb-4"><img class="img-fluid rounded" src="{{article.articleImage.url}}" alt="" /></figure>
+            {% endif %}
+
+            <!-- Post content-->
+            <p class="lead">
+                {{article.content|safe}} <!--safe ile yazımızın html görünümden kurtulmasını sağlıyourz-->
+            </p>
+
+        <h4>Yorumlar</h4>
+        <hr>
+
+        {% comment %} {% for %} döngüsünü kullanmadığınızda, şablon motoru comments sorgu kümesindeki her yorum nesnesini döngü içinde işleyemez. Sonuç olarak, sadece sorgu kümesindeki ilk yorum görüntülenir ve şablon motoru diğer yorumları göstermez. {% endcomment %}
+
+        {% if comments %}
+        {% for comment in comments %} 
+            <!-- Single comment-->
+            <div class="media mb-4">
+                <img class="d-flex mr-3 rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="">
+                <div class="media-body">
+                <h5 class="mt-0">{{comment.comment_author}}</h5>
+                <div  style="opacity: 0.7; font-size: 12px;">{{comment.comment_date}}</div>
+                {{comment.comment_content}}
+                
+                </div>
+            </div>
+       
+        {% endfor %}
+
+        {% else %}
+        <div class="alert alert-danger">Bu Makaleye Herhangi Bir Yorum Yazılmamış, ilk yorum yapan siz olun</div>
+        
+        {% endif %}
+
+        </article>
+        <div class="card my-4">
+            <h5 class="card-header">Yorum Ekle:</h5>
+            <div class="card-body">
+              <form method="post" action="{% url "article:comment" article.id %}"><!--butona basıldığında bu url ye gi. method="post" ile güvenli bir şekilde yorumu gönder-->
+                {% csrf_token %}<!--mutlaka eklememiz gerekiyor. Her formun altında olması gerekiyor-->
+                <div class="form-group">
+                    <label for="formGroupExampleInput">İsim</label>
+                    <input name = "comment_author" type="text" class="form-control" id="formGroupExampleInput" placeholder="İsminizi girin">
+                  </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Yorum</label>
+                  <textarea name = "comment_content" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-danger" style="float: right;">Ekle</button>
+              </form>
+            </div>
+          </div>
+          </div>
+          
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock body %}
+
+
+
+

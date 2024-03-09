@@ -1,0 +1,71 @@
+{% extends "layoutArticles.html" %}
+{% block body %}
+<div class="row">
+    <div class="col-md-10 offset-md-3"><!--içerikleri ortalamak için class="col-md-10 offset-md-3" kullandık.   col-md-10 yaparak içeriklerin genişliklerini büyültüük col-md-6 da olursada daha a geniş olur-->
+        <div class="col-lg-8">
+            <h3>Makaleler</h3>
+            <hr>
+        </div>
+    </div>
+</div>
+
+{% if articles %}
+
+{% for article in articles %}
+
+<div class="row">
+    <div class="col-md-10 offset-md-3"> <!--içerikleri ortalamak için class="col-md-10 offset-md-3" kullandık.   col-md-10 yaparak içeriklerin genişliklerini büyültüük col-md-6 da olursada daha a geniş olur-->
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <a href="{% url 'article:detail' article.id %}"><h2 class="mt-4">{{article.title}}</h2></a><!--url 'article:detail' article.id diyerek dinamik bir şekilde o linke gidebiliyorun-->
+                    <!-- Author title-->
+                    <div class="text-muted fst-italic mb-2"><b>{{article.author.username}}</b> tarafından oluşturuldu</div>
+                    <hr>
+                    <!-- Post meta content-->
+                    <div class="text-muted fst-italic mb-2">{{article.createdDate}}</div>
+                    <hr>
+                </header>
+
+                {% if article.articleImage %}<!--Eğer resim varsa -->
+                <!-- Preview image figure-->
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{article.articleImage.url}}" alt="" /></figure>
+                {% endif %}
+
+                <!-- Post content-->
+                <p class="lead">
+                    {{article.content|safe|truncatewords:10 }} <!--safe ile yazımızın html görünümden kurtulmasını sağlıyoruz. truncatewords:10 ilede ilk 10 kelimenin görünmesini sağlıyoruz-->
+                </p>
+                
+
+                <a href="/articles/article/{{article.id}}" class="btn btn-danger" style="float: right;">Devamını Oku</a><!--float ile butonu sağa yasladım-->
+            </article>
+        </div>
+        
+    </div>
+</div>
+
+
+
+
+{% endfor %}
+
+
+{% else %}
+
+<div class="alert alert-danger">
+    Makale Bulunamadı
+</div>
+
+{% endif %}
+
+
+
+{% endblock body %}
+
+
+
+
